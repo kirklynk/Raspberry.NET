@@ -1,0 +1,22 @@
+﻿@page "/"
+@inject HardwareService _hardwareService
+
+
+<PageTitle>Home</PageTitle>
+
+
+<RadzenStack Orientation="Orientation.Vertical" Style="width: 1024px; margin: 0 auto;">
+
+    <RadzenToggleButton @bind-Value="_hardwareService.Relay1" Text="Relay One" Variant="@(_hardwareService.Relay1? Variant.Filled: Variant.Outlined)" />
+    <RadzenToggleButton @bind-Value="_hardwareService.Relay2" Text="Relay Two" Variant="@(_hardwareService.Relay2? Variant.Filled: Variant.Outlined)" />
+    <RadzenToggleButton @bind-Value="_hardwareService.Relay3" Text="Relay Three" Variant="@(_hardwareService.Relay3? Variant.Filled: Variant.Outlined)" />
+    <RadzenToggleButton @bind-Value="_hardwareService.Relay4" Text="Relay Four" Variant="@(_hardwareService.Relay4? Variant.Filled: Variant.Outlined)" />
+</RadzenStack>
+
+<style>
+    .rz-toggle-button {
+        height: 100px;
+        margin: 10px;
+        font-size: 2rem;
+    }
+</style>
