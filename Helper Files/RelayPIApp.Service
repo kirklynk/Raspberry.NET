@@ -1,0 +1,14 @@
+#Service used to start the RelayPI Web Server
+Desctiption=Relay PI Web Application
+#After=multi-user.target
+After=network.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/app/RelayPIApp --urls http://+:80
+WorkingDirectory=/home/pi/app
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,22 +1,41 @@
 ﻿@page "/"
 @inject HardwareService _hardwareService
+@implements IDisposable
 
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inland 4 Port Relay</PageTitle>
 
+<div style="display: flex; height: 100%; align-items: center; justify-content: center;">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.Normal" Wrap="FlexWrap.Wrap" Gap="1rem">
+        @foreach (var relay in _hardwareService.Pins.Where(x => x.InUse))
+        {
+            <RadzenToggleButton @bind-Value="relay.State" Text=@relay.Name
+                                Variant="@(relay.State? Variant.Filled : Variant.Outlined)"
+                                Shade="Shade.Darker"
+                                ButtonStyle="ButtonStyle.Info"
+                                ToggleButtonStyle="ButtonStyle.Success" />
+        }
+    </RadzenStack>
+</div>
 
-<RadzenStack Orientation="Orientation.Vertical" Style="width: 1024px; margin: 0 auto;">
+@code {
 
-    <RadzenToggleButton @bind-Value="_hardwareService.Relay1" Text="Relay One" Variant="@(_hardwareService.Relay1? Variant.Filled: Variant.Outlined)" />
-    <RadzenToggleButton @bind-Value="_hardwareService.Relay2" Text="Relay Two" Variant="@(_hardwareService.Relay2? Variant.Filled: Variant.Outlined)" />
-    <RadzenToggleButton @bind-Value="_hardwareService.Relay3" Text="Relay Three" Variant="@(_hardwareService.Relay3? Variant.Filled: Variant.Outlined)" />
-    <RadzenToggleButton @bind-Value="_hardwareService.Relay4" Text="Relay Four" Variant="@(_hardwareService.Relay4? Variant.Filled: Variant.Outlined)" />
-</RadzenStack>
+    protected override void OnInitialized()
+    {
+        _hardwareService.PropertyChanged += async (s, e) => await InvokeAsync(StateHasChanged);
+
+    }
+
+    public void Dispose()
+    {
+        _hardwareService.PropertyChanged -= async (s, e) => await InvokeAsync(StateHasChanged);
+    }
+}
 
 <style>
     .rz-toggle-button {
         height: 100px;
-        margin: 10px;
-        font-size: 2rem;
+        width: 330px !important;
+        font-size: 3rem;
     }
 </style>

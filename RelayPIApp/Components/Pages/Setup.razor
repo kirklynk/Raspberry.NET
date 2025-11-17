@@ -1,0 +1,47 @@
+﻿@page "/setup"
+@inject HardwareService _hardwareService
+@implements IDisposable
+
+<h1>Gpio Configuration</h1>
+
+<RadzenDataGrid Data="_hardwareService.Pins" TItem="Pin">
+    <Columns>
+        <RadzenDataGridColumn TItem="Pin" Property="Number" Title="Gpio" Width="100px;" />
+        <RadzenDataGridColumn TItem="Pin" Property="Name" Title="Name">
+            <Template Context="pin">
+                <RadzenTextBox @bind-Value="pin.Name" Style="width:100%" Disabled="pin.InUse" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Pin">
+            <Template Context="pin">
+                <RadzenToggleButton @bind-Value="pin.InUse" ButtonStyle="ButtonStyle.Primary"
+                                    ToggleButtonStyle="ButtonStyle.Danger" 
+                                    Text="@(pin.InUse ? "Enabled" : "Enable")" Change="@(async (args) => _hardwareService.UpdatePinUsage(pin, args))" Style="width: 180px;" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+@* <RadzenStack>
+    @foreach (var pin in _hardwareService.Pins)
+    {
+        <div style="width: 100%;">
+            <span style="width: 200px;">GPIO @pin.Number:</span>
+            <RadzenToggleButton @bind-Value="pin.InUse" ButtonStyle="ButtonStyle.Primary" ToggleButtonStyle="ButtonStyle.Success" Text="Enable" Change="@(async (args) => _hardwareService.UpdatePinUsage(pin, args))" />
+            <RadzenTextBox @bind-Value="pin.Name" Style="margin-left: 10px;" Disabled="pin.InUse" />
+        </div>
+    }
+</RadzenStack> *@
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        _hardwareService.PropertyChanged += async (s, e) => await InvokeAsync(StateHasChanged);
+
+    }
+
+    public void Dispose()
+    {
+        _hardwareService.PropertyChanged -= async (s, e) => await InvokeAsync(StateHasChanged);
+    }
+}
