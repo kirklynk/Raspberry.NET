@@ -28,3 +28,19 @@ This is a simple application that allows you to:
 6. Create a directory for the application, e.g., `mkdir ~/home/pi/app`. Do not use Sudo for this step.
 7. Copy the contents of deployed folder to your Raspberry Pi using SCP, SFTP, or a USB drive to this directory. I used this powershell scp command, `scp -r c:\temp pi@relaypi.local:/home/pi/app`. This will be different for you as my application is deployed to `c:\temp` on my development machine and my Pi is named relaypi.local.
 8. Once the contents are copied to the Pi directory. SSH into the PI and change into the directory we copied the contents to on the Pi. This is because we need to make the application executable. Run the command `sudo chmod +x RelayPIApp`.
+9. Now you can test run the application using the command `./RelayPIApp`. You should see output indicating that the web server is running and listening on a specific port (default is 5000). Optionally, you can specify a different `sudo ./RelayPIApp --urls "http://+:80` to run the application on port 80.
+10. Open a web browser on your development machine and navigate to `http://<Raspberry_Pi_IP_Address>:5000` (or the port you specified) to access the Relay PI App web interface. You should see the Relay PI App interface where you can control and monitor the relay ports.
+11. To stop the application, you can simply press `Ctrl + C` in the terminal where the application is running.
+12. (Optional) To run the application as a background service, you can create a systemd service file. This step is optional but recommended for ease of use. You can copy the `RelayPIApp.service` file from the `docs` folder in the repository to the Pi's `/etc/systemd/system/` and modify it as needed.
+	- Go to the `/etc/systemd/system/` directory on the Pi using `cd /etc/systemd/system/`
+	- Run `sudo nano RelayPIApp.service` to edit the service file if needed.
+	- Modify the `ExecStart` line to point to the correct location of the `RelayPIApp` executable on your Pi.
+	- Modify the `WorkingDirectory` line to point to the directory where the application is located.
+	- Save the changes and exit the editor.
+	- Enable the service to start on boot with the command `sudo systemctl enable RelayPIApp.service`.
+	- Start the service with the command `sudo systemctl start RelayPIApp.service`.
+	- Check the status of the service with the command `sudo systemctl status RelayPIApp.service`.
+
+### Usage
+- Hook up the 4 port relay module to the Raspberry Pi according to the relay module's wiring diagram.
+- Access the web interface using a web browser by navigating to `http://<Raspberry_Pi_IP_Address>:5000` (or the port you specified). You should be able to control and monitor the relay ports from this interface.
